@@ -2,9 +2,9 @@ var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 
 var config = {
-  server: 'localhost',
+  server: 'ec2-54-66-138-36.ap-southeast-2.compute.amazonaws.com',
   userName: 'sa',
-  password: 'sa'
+  password: '5@wSNN5IBHSTd%sD5qefAVGR'
   /*
   ,options: {
     debug: {
