@@ -148,7 +148,7 @@ var connection = new sql.Connection(config, function(err) {
     // 1000 0.5s
     // 10000 1s
     // 100000 7s
-    // 700875 44s
+    // 700875 44s from home, 26s from AWS to AWS Sydney
 
     request.on('recordset', function(columns) {
         console.log("spInvoiceSelectAll - on recordset");
