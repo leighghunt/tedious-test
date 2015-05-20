@@ -15,21 +15,21 @@ var config = {
     }
 }
 
-var connection = new sql.Connection(config, function(err) {
+sql.connect(config, function(err) {
     if(err){
       console.log(err);
     }
 
     // Query
 
-    var request = new sql.Request(connection); // or: var request = connection.request();
+    var request = new sql.Request(); // or: var request = .request();
     request.query('select 1 as number', function(err, recordset) {
         // ... error checks
 
         console.dir(recordset);
     });
 
-    request = new sql.Request(connection); // or: var request = connection.request();
+    request = new sql.Request(); // or: var request = .request();
     request.query('SELECT count(*) FROM ICP', function(err, recordset) {
         // ... error checks
 
@@ -38,39 +38,30 @@ var connection = new sql.Connection(config, function(err) {
 
     console.time("SELECT TOP 100 * FROM ICP");
 
-    request = new sql.Request(connection); // or: var request = connection.request();
+    request = new sql.Request(); // or: var request = .request();
     request.query('SELECT TOP 100 * FROM ICP', function(err, recordset) {
         // ... error checks
         console.timeEnd("SELECT TOP 100 * FROM ICP");
         console.dir(recordset.length);
     });
 
-    
-
     // Stored Procedure
 
     console.time("spICPSelect");
-    var request = new sql.Request(connection);
+    var request = new sql.Request();
     request.input('ICP', sql.VarChar(20), '0000011111GN400');
     request.execute('spICPSelect', function(err, recordsets, returnValue) {
         if(err){
           console.log(err);
         }
 
+        console.log(recordsets)
         //console.dir(recordsets);
         console.timeEnd("spICPSelect");
     });
 
-
-
-
-
-
-
-
-
     console.time("spInvoiceSelectAllOneGo");
-    var spInvoiceSelectAllOneGo = new sql.Request(connection);
+    var spInvoiceSelectAllOneGo = new sql.Request();
     spInvoiceSelectAllOneGo.stream = false;
     spInvoiceSelectAllOneGo.execute('spInvoiceSelectAll', function(err, recordsets, returnValue) {
         if(err){
@@ -81,15 +72,10 @@ var connection = new sql.Connection(config, function(err) {
         console.log("spInvoiceSelectAllOneGo - length: " + recordsets[0].length);
     });
 
-
-
-
-
-
     var rowsspInvoiceSelectAllStream = 0;
 
     console.time("spInvoiceSelectAllStream");
-    var spInvoiceSelectAll = new sql.Request(connection);
+    var spInvoiceSelectAll = new sql.Request();
     spInvoiceSelectAll.stream = true;
     spInvoiceSelectAll.execute('spInvoiceSelectAll');
 
@@ -118,32 +104,13 @@ var connection = new sql.Connection(config, function(err) {
 
     });
 
-
-
-
-
-
-
-/*
-    console.time("SELECT * FROM AuditTable");
-
-    request = new sql.Request(connection); // or: var request = connection.request();
-    request.query('SELECT TOP 100000 * FROM AuditTable', function(err, recordset) {
-        // ... error checks
-        console.timeEnd("SELECT * FROM AuditTable");
-        console.dir(recordset.length);
-    });
-*/
-
-
-
     rowsAuditTable = 0;
 
     console.time("SELECT * FROM AuditTable streamed");
 
-    request = new sql.Request(connection); // or: var request = connection.request();
+    request = new sql.Request(); // or: var request = .request();
     request.stream = true;
-    request.query('SELECT TOP 1000000 * FROM AuditTable');
+    request.query('SELECT TOP 1000 * FROM AuditTable');
 
     // 1000 0.5s
     // 10000 1s
@@ -169,12 +136,6 @@ var connection = new sql.Connection(config, function(err) {
     });
 
 
-
-
-
-    connection.close();
-
-    console.timeEnd("TEST B");
 });
 
 console.timeEnd("TEST A");

@@ -20,5 +20,21 @@ server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
 
+
+var config = {
+    user: 'sa',
+    password: '5@wSNN5IBHSTd%sD5qefAVGR',
+    server: 'dev-gasnet.venari.co.nz', // You can use 'localhost\\instance' to connect to named instance
+    database: 'midas',
+
+    options: {
+        requestTimeout: 60000
+    //    encrypt: true // Use this if you're on Windows Azure
+    }
+}
+
+
+
 // Expose app
 exports = module.exports = app;
+exports.config = config;
