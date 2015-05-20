@@ -54,29 +54,52 @@ function ICP(){
 
 module.exports = ICP;
 
-module.exports.find = function(ICP, SupplyID, FlatSuiteAprtmnt, HouseNumLow, HouseNumHigh, StreetID, PremiseName, EndUser, TownName, TLAName, RegionName) {
+module.exports.find = function(criteria, callback) {
 	console.log("icp.find()");
-	sql.connect(config, function(err, callback) {
+	sql.connect(config, function(err) {
 	    if(err){
 	      console.log(err);
+	      return;
 	    }
-
-	    console.time("spICPSearch");
+	    console.log(criteria);
 
 	    var request = new sql.Request();
 
-	    request.input('ICP', sql.VarChar(15), ICP);
-			request.input('SupplyID', sql.VarChar(15), SupplyID);
-			request.input('FlatSuiteAprtmnt', sql.VarChar(50), FlatSuiteAprtmnt);
-			request.input('HouseNumLow', sql.Int, HouseNumLow);
-			request.input('HouseNumHigh', sql.Int, HouseNumHigh);
-			request.input('StreetID', sql.Int, StreetID);
-			request.input('PremiseName', sql.VarChar(100), PremiseName);
-			request.input('EndUser', sql.VarChar(150), EndUser);
-			request.input('TownName', sql.VarChar(50), TownName);
-			request.input('TLAName', sql.VarChar(100), TLAName);
-			request.input('RegionName', sql.VarChar(50), RegionName);
+      console.time("ICP Search");
+      request.input('ICP', sql.VarChar(15), criteria.ICP);
+	   	request.query("SELECT TOP 10 ICP FROM ICP WHERE ICP LIKE '%' + @ICP + '%'", function(err, recordsets, returnValue) {
+	        if(err){
+	          console.log(err);
+        		callback(err);
+	        }
 
+	        console.log(recordsets);
+	        if(recordsets!=null)
+	        {
+		        console.log(recordsets.length);
+		        console.timeEnd("ICP Search");
+
+	      		callback(null, recordsets);
+	      	}
+      });
+
+/*
+	    console.time("spICPSearch");
+	    console.log(criteria);
+
+	    var request = new sql.Request();
+
+	    request.input('ICP', sql.VarChar(15), criteria.ICP);
+			request.input('SupplyID', sql.VarChar(15), criteria.SupplyID);
+			request.input('FlatSuiteAprtmnt', sql.VarChar(50), criteria.FlatSuiteAprtmnt);
+			request.input('HouseNumLow', sql.Int, criteria.HouseNumLow);
+			request.input('HouseNumHigh', sql.Int, criteria.HouseNumHigh);
+			request.input('StreetID', sql.Int, criteria.StreetID);
+			request.input('PremiseName', sql.VarChar(100), criteria.PremiseName);
+			request.input('EndUser', sql.VarChar(150), criteria.EndUser);
+			request.input('TownName', sql.VarChar(50), criteria.TownName);
+			request.input('TLAName', sql.VarChar(100), criteria.TLAName);
+			request.input('RegionName', sql.VarChar(50), criteria.RegionName);
 
 	   	request.execute('spICPSearch', function(err, recordsets, returnValue) {
 	        if(err){
@@ -84,12 +107,14 @@ module.exports.find = function(ICP, SupplyID, FlatSuiteAprtmnt, HouseNumLow, Hou
         		callback(err);
 	        }
 
-	        console.dir(recordsets);
+	        console.log(recordsets);
+	        console.log(recordsets[0].length);
 	        console.timeEnd("spICPSearch");
 
       		callback(null, recordsets);
       });
-  });
+  */
+});
 }
 
 module.exports.findById = function(id, callback){

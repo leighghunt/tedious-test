@@ -15,52 +15,58 @@ exports.index = function(req, res) {
 
 
 
-// Get list of logs
+// Get list of icps
 exports.index = function(req, res) {
-  ICP.find(function (err, logs) {
+  ICP.find(function (err, icps) {
     if(err) { return handleError(res, err); }
-    return res.json(200, logs);
+    return res.json(200, icps);
   });
 };
 
-// Get a single log
+// Get a single icp
 exports.show = function(req, res) {
-	console.log(req.params.id)
-  ICP.findById(req.params.id, function (err, log) {
+  ICP.findById(req.params.id, function (err, icps) {
     if(err) { return handleError(res, err); }
-    if(!log) { return res.send(404); }
-    return res.json(log);
+    if(!icp) { return res.send(404); }
+    return res.json(icp);
   });
 };
 
-// Creates a new log in the DB.
+exports.searchByICP = function(req, res) {
+  ICP.find({ICP: req.params.criteria}, function (err, icps) {
+    if(err) { return handleError(res, err); }
+    return res.json(200, icps);
+  });
+};
+
+// Creates a new icp in the DB.
 exports.create = function(req, res) {
-  ICP.create(req.body, function(err, log) {
+  ICP.create(req.body, function(err, icp) {
     if(err) { return handleError(res, err); }
-    return res.json(201, log);
+    return res.json(201, icp);
   });
 };
 
-// Updates an existing log in the DB.
+// Updates an existing icp in the DB.
 exports.update = function(req, res) {
   if(req.body._id) { delete req.body._id; }
-  Log.findById(req.params.id, function (err, log) {
+  icp.findById(req.params.id, function (err, icp) {
     if (err) { return handleError(res, err); }
-    if(!log) { return res.send(404); }
-    var updated = _.merge(log, req.body);
+    if(!icp) { return res.send(404); }
+    var updated = _.merge(icp, req.body);
     updated.save(function (err) {
       if (err) { return handleError(res, err); }
-      return res.json(200, log);
+      return res.json(200, icp);
     });
   });
 };
 
-// Deletes a log from the DB.
+// Deletes a icp from the DB.
 exports.destroy = function(req, res) {
-  Log.findById(req.params.id, function (err, log) {
+  icp.findById(req.params.id, function (err, icp) {
     if(err) { return handleError(res, err); }
-    if(!log) { return res.send(404); }
-    log.remove(function(err) {
+    if(!icp) { return res.send(404); }
+    icp.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.send(204);
     });
