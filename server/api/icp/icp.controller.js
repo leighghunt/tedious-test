@@ -6,18 +6,11 @@ var ICP = require('./icp.model');
 
 var icp = new ICP();
 
-// Get list of icps
-exports.index = function(req, res) {
-  res.json([]);
-};
-
-
-
 
 
 // Get list of icps
 exports.index = function(req, res) {
-  ICP.find(function (err, icps) {
+  ICP.find(null, function (err, icps) {
     if(err) { return handleError(res, err); }
     return res.json(200, icps);
   });

@@ -56,6 +56,9 @@ module.exports = ICP;
 
 module.exports.find = function(criteria, callback) {
 	console.log("icp.find()");
+
+	criteria = typeof criteria !== 'undefined' && criteria != null ? criteria : {};
+
 	sql.connect(config, function(err) {
 	    if(err){
 	      console.log(err);
